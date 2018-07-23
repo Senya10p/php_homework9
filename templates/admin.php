@@ -36,7 +36,7 @@
         </a>
         <a href="/../admin/logout.php">
             <div style="float: left; height: 30px; margin-left: 20px; margin-top: 3px" onmouseover="this.style.backgroundColor='cornflowerblue';" onmouseout="this.style.backgroundColor='yellowgreen';">
-                Выход из админминки
+                Выход из админки
             </div>
         </a>
 
