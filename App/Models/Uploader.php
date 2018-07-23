@@ -5,9 +5,7 @@ namespace App\Models;
 class Uploader  //класс для загрузки файлов
 {
     public $upl;
-    public $pathImg;       //путь до файла
 
-    public $types;     //разрешённые типы файлов для загрузки
 
     // В конструктор передается имя поля формы, от которого мы ожидаем загрузку файла
     public function __construct( $upl )
@@ -18,36 +16,33 @@ class Uploader  //класс для загрузки файлов
     //Метод isUploaded() проверяет - был ли загружен файл от данного имени поля
     public  function isUploaded()
     {
-        if  (isset( $_FILES[$this->upl] ) ) {                 //Проверка, что файл существует
+        if  ( isset( $_FILES[$this->upl] ) ) {                 //Проверка, что файл существует
             if ( 0 === $_FILES[$this->upl]['error'] ) {     //Проверка, нет ли ошибок при загрузке файла
                 if ( is_uploaded_file( $_FILES[$this->upl]['tmp_name'] ) ) {  //проверяем был ли загружен файл
+
                     return true;
                 }
             }
         }
     }
 
-    public function getPath()
-    {
-        return $this->pathImg;
-    }
 
     //Метод upload() осуществляет перенос файла (если он был загружен!) из временного места в постоянное
-    public function upload($pathImg, $types)
+    public function upload( $pathImg, $types )
     {
         if ( true === $this->isUploaded() ) {    //Проверка - был ли загружен файл
 
-         //   if (in_array( mime_content_type( $_FILES[$this->upl]['tmp_name'] ), $types )){
                 $type = $_FILES[$this->upl]['type'];    //Проверка удовлетворяет ли тип загружаемого файла списку разрешённых типов
 
-            if (in_array($type, $types )){
-                if (file_exists($pathImg . $_FILES[$this->upl]['name'] ) ){      //Проверка наличия файла с таким же именем
+            if ( in_array( $type, $types ) ){
+                if ( file_exists( $pathImg . $_FILES[$this->upl]['name'] ) ){      //Проверка наличия файла с таким же именем
+
                     $i = 1;
                     //Пока файл с таким именем существует, добавляем к загружаемому файлу в начале имени число(сначала 1, если такой есть, то добавляем 2 и т.д.)
-                    while (file_exists($pathImg . $i . $_FILES[$this->upl]['name'] ) ) {
+                    while ( file_exists( $pathImg . $i . $_FILES[$this->upl]['name'] ) ) {
+
                         $i++;
                     }
-
                     $nf = $i . $_FILES[$this->upl]['name'];
                 }
                 else {
@@ -62,5 +57,4 @@ class Uploader  //класс для загрузки файлов
             }
         }
     }
-
 }
