@@ -9,11 +9,13 @@ class Authorization
     protected $db;
     protected $session;
 
-
     public function __construct()
     {
         $this->db = new DB();
-        $this->session = new Session();
+
+        if ( PHP_SESSION_ACTIVE !== session_status() ) {
+            session_start();
+        }
         $us = $this->getUserSession();
 
         if ( $this->findLogin($us) ) {
@@ -26,9 +28,10 @@ class Authorization
 
     protected function getUserSession() //берём параметры сессии
     {
-        $us = $this->session->getParameter('username');
-        if ( is_string($us) ) {
-            return $us;
+        if ( PHP_SESSION_ACTIVE === session_status() ) {
+            if ( isset($_SESSION['username']) ) {
+                return $_SESSION['username'];
+            }
         }
     }
 
@@ -36,7 +39,6 @@ class Authorization
     {
         return $this->username;
     }
-
 
     protected function findLogin($login) //если есть пользователь с таким логином, то вернёт true
     {
@@ -47,7 +49,6 @@ class Authorization
         if ( is_array($arr) ) {
             if ( isset($arr[0]['login']) ) {
                 if ( $login === $arr[0]['login'] ) {
-
                     return true;
                 }
             }
@@ -64,7 +65,6 @@ class Authorization
         if ( is_array($arr) ) {
             if ( isset( $arr[0]['login'], $arr[0]['hashpass'] ) ) {
                 if ( $login === $arr[0]['login'] ) {
-
                     return new Admin( $arr[0]['login'], $arr[0]['hashpass'] );
                 }
             }
@@ -74,27 +74,27 @@ class Authorization
     public function authorization(string $login, string $password) //метод для авторизации
     {
         $ad = $this->findAdmin($login);
-        $us = $ad->getLogin();
-        $h = $ad->getHashPass();
-
-        if ($login === $us) {
-            if ( password_verify($password, $h) ) {
-                if ( $this->session->setParameter('username', $login) ) {
-                    $this->username = $login;
-
-                    return true;
+        if (null !== $ad) {
+            $us = $ad->getLogin();
+            $h = $ad->getHashPass();
+            if ($login === $us) {
+                if (password_verify($password, $h)) {
+                    if (isset($_SESSION)) {
+                        $_SESSION['username'] = $login;
+                        $this->username = $login;
+                        return true;
+                    }
                 }
             }
         }
         return false;
     }
 
-
     public function out() //выход
     {
-        $this->session->destroy();
+        if ( PHP_SESSION_ACTIVE === session_status() ) {
+            session_destroy();
+        }
         $this->username = null;
-
     }
-
 }
