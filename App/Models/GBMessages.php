@@ -4,12 +4,12 @@ namespace App\Models;
 
 class GBMessages  //Создаём класс записей гостевой книги
 {
-    protected $data;
+    protected $dataBase;
     protected $articles;
 
    public function __construct()
    {
-       $this->data = new DB();
+       $this->dataBase = new DB();
    }
 
    public function getAll()
@@ -19,7 +19,7 @@ class GBMessages  //Создаём класс записей гостевой к
        }
        $sql = 'SELECT * FROM guestbook ORDER BY id DESC';
        $ret = [];
-       $arts = $this->data->query($sql, $ret);
+       $arts = $this->dataBase->query($sql, $ret);
        $this->articles = [];
         if (false !== $arts) {
             foreach ($arts as $arr) {
@@ -43,12 +43,12 @@ class GBMessages  //Создаём класс записей гостевой к
        if ( $t < 1 || $t > 100000 ) { //ограничение по длине
            return false;
        }
-       $sql = 'INSERT INTO guestbook (text, author) VALUE (:t,:a)'; //Добавление записей в гостевую книгу
+       $sql = 'INSERT INTO guestbook (text, author) VALUES (:t,:a)'; //Добавление записей в гостевую книгу
        $ar = [
            ':t' => $article->getText(),
            ':a' => $article->getAuthor()
        ];
-       $d = $this->data->query($sql, $ar);
+       $d = $this->dataBase->query($sql, $ar);
        if (false === $d) { //если запись не добавлена
            return false;
        }
@@ -62,7 +62,7 @@ class GBMessages  //Создаём класс записей гостевой к
    {
        $sql = 'DELETE FROM guestbook WHERE id=:id';//Удаление записи с таким id из БД
        $ar = [':id' => $id];
-       $d = $this->data->query( $sql, $ar );
+       $d = $this->dataBase->query( $sql, $ar );
 
        if ( false === $d) {
            return false;

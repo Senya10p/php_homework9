@@ -1,6 +1,6 @@
 <?php   //класс для Авторизации
 
-namespace App\Models;
+namespace App;
 
 
 class Authorization
@@ -11,7 +11,7 @@ class Authorization
 
     public function __construct()
     {
-        $this->db = new DB();
+        $this->db = new \App\Models\DB();
 
         if ( PHP_SESSION_ACTIVE !== session_status() ) {
             session_start();
@@ -65,7 +65,7 @@ class Authorization
         if ( is_array($arr) ) {
             if ( isset( $arr[0]['login'], $arr[0]['hashpass'] ) ) {
                 if ( $login === $arr[0]['login'] ) {
-                    return new Admin( $arr[0]['login'], $arr[0]['hashpass'] );
+                    return new \App\Models\Admin( $arr[0]['login'], $arr[0]['hashpass'] );
                 }
             }
         }

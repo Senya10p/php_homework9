@@ -4,7 +4,7 @@
 require __DIR__ . '/autoload.php';
 
 //Авторизация
-$admin = new \App\Models\Authorization();
+$admin = new \App\Authorization();
 
 if ( null === $admin->getUsername() ) { //если пользователь не вошёл
     header('Location: /admin/login.php');
@@ -29,7 +29,7 @@ $list = array_diff($list, ['.', '..']);
 $text = new \App\Models\AboutMe(__DIR__ . '/aboutme.txt');
 
 if ( isset( $_POST['text'] ) ) {
-    $text->append($_POST['text']);
+    $text->update($_POST['text']);
     $text->save();
 }
 
@@ -47,7 +47,7 @@ $data = $gb->getAll();
 //Отображение
 $view = new \App\Models\View();
 
-//Для гостевой книги
+
 $view->assign('data', $data); //гостевая книга
 
 $view->assign('records', $text->getData() );//текстовка обо мне

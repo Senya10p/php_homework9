@@ -2,7 +2,7 @@
 
 require __DIR__ . '/../autoload.php';
 
-$admin = new \App\Models\Authorization();
+$admin = new \App\Authorization();
 
 $admin->getUsername();
 

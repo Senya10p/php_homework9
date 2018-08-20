@@ -23,12 +23,13 @@ class AboutMe
         return $this->data;
     }
 
-        public function append($text) //Метод append($text) добавляет новую запись к массиву записей
-        {
-            if ($text != '') {
-               return $this->data = $text;
-            }
+    public function update($text) //Метод update($text) обновляет запись
+    {
+        if ($text != '') {
+           $this->data = $text;
+           return $this;
         }
+    }
 
     public function save() //Метод save() сохраняет массив в файл
     {
